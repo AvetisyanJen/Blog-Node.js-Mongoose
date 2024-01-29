@@ -5,9 +5,9 @@ const  {
     deleteBlogPost, 
     updateBlogPost
 } = require('../controllers/blogPostController');
-const { AuthenticateUserToken } = require('../jwt/auth-user');
+const { AuthenticateUserToken } = require('../middleware/auth-user');
 const post_router = express.Router();
-const { CheckBlogPostOwnership}=require('../middlewareUserOwns')
+const { CheckBlogPostOwnership}=require('../middleware/UserOwns')
 
 
 

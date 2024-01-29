@@ -1,11 +1,22 @@
 const jwt = require('jsonwebtoken');
 const { SECRET } = require("../config");
 
+const blacklistedTokens = [];
+
 function AuthenticateUserToken(req, res, next) {
     const token = req.headers.authorization;
 
+    // if (bearer !== 'Bearer' || !token) {
+    //     return res.status(401).json({ error: "Unauthorized: Missing or invalid token format" });
+    // }
     if (!token) {
         return res.status(401).json({ error: "Unauthorized: Missing or invalid token format" });
+    }
+    // const [bearer, token] = authorizationHeader.split(' ');
+
+    // Check if the token is blacklisted
+    if (blacklistedTokens.includes(token)) {
+        return res.status(401).json({ error: "Unauthorized: Token has been invalidated (logged out)." });
     }
 
     jwt.verify(token, SECRET, (err, decoded) => {
@@ -24,7 +35,6 @@ function AuthenticateUserToken(req, res, next) {
 }
 
 module.exports = {
-    AuthenticateUserToken
+    AuthenticateUserToken,
+    blacklistedTokens,
 };
-
-
