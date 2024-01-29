@@ -34,9 +34,6 @@ async function createBlogPost(req, res) {
 
 
 
-
-
-
 async function getBlogPosts(req, res) {
     try {
         const blogPosts = await BlogPost.find().populate('author', 'userName');
@@ -47,7 +44,20 @@ async function getBlogPosts(req, res) {
     }
 }
 
+
+async function deleteBlogPost(req,res){
+    try {
+        const deletedBlogPost = await BlogPost.findByIdAndDelete(req.params.postId);
+        res.json({ message: "Blog post deleted successfully", deletedBlogPost });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
+
 module.exports = {
     createBlogPost,
     getBlogPosts,
+    deleteBlogPost
 };
