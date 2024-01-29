@@ -1,5 +1,8 @@
 const BlogPost = require('../models/blogPosts');
+const Comment=require("../models/comments")
 const User=require("../models/users")
+
+
 async function createBlogPost(req, res) {
     try {
         const { title, body } = req.body;
@@ -67,7 +70,7 @@ async function updateBlogPost(req, res){
             return res.status(404).json({ error: 'Post not found' });
         }
 
-        // Update the existing post with the new data
+       
         existingPost.title = updatedData.title || existingPost.title;
         existingPost.body = updatedData.body || existingPost.body;
     
@@ -86,11 +89,53 @@ async function updateBlogPost(req, res){
 
 
 
+// const getBlogPostWithComments = async (req, res) => {
+//     try {
+//         const postId = req.params.postId;
+
+//         // Find the blog post
+//         const blogPost = await BlogPost.findById(postId).populate('comments');
+
+//         if (!blogPost) {
+//             return res.status(404).json({ error: 'Blog post not found' });
+//         }
+
+//         // Retrieve comments associated with the blog post
+//         const comments = await Comment.find({ blogPost: postId });
+
+//         res.status(200).json({ blogPost, comments });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ error: 'Internal Server Error' });
+//     }
+// };
+const getAllBlogPostsAndComments = async (req, res) => {
+    try {
+    
+        const blogPosts = await BlogPost.find().populate('comments');
+
+   
+        const comments = await Comment.find();
+
+        res.status(200).json({ blogPosts, comments });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
+
+
+
+
 
 
 module.exports = {
     createBlogPost,
     getBlogPosts,
     deleteBlogPost,
+    getAllBlogPostsAndComments,
+    // getBlogPostWithComments,
     updateBlogPost
 };
