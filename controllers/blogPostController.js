@@ -4,7 +4,6 @@ async function createBlogPost(req, res) {
     try {
         const { title, body } = req.body;
 
-        // Ensure req.user and req.user.id are available
         if (!req.user || !req.user.id) {
             return res.status(401).json({ error: "Unauthorized: User information not available." });
         }
@@ -55,9 +54,43 @@ async function deleteBlogPost(req,res){
     }
 }
 
+async function updateBlogPost(req, res){
+    try {
+        const {postId} = req.params;
+        const updatedData = req.body; 
+// console.log(req.params.id,updatedData)
+// console.log(req.params)
+       
+        const existingPost = await BlogPost.findById(postId);
+
+        if (!existingPost) {
+            return res.status(404).json({ error: 'Post not found' });
+        }
+
+        // Update the existing post with the new data
+        existingPost.title = updatedData.title || existingPost.title;
+        existingPost.body = updatedData.body || existingPost.body;
+    
+        existingPost.updatedAt = new Date();
+
+ 
+        await existingPost.save();
+      
+
+        return res.status(200).json({ message: 'Post updated successfully', post: existingPost });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
+
+
 
 module.exports = {
     createBlogPost,
     getBlogPosts,
-    deleteBlogPost
+    deleteBlogPost,
+    updateBlogPost
 };
