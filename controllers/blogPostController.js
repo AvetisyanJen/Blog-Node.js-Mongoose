@@ -11,7 +11,7 @@ async function createBlogPost(req, res) {
             return res.status(401).json({ error: "Unauthorized: User information not available." });
         }
 
-        // Check if the user exists based on the provided user ID
+     
         const user = await User.findById(req.user.id);
         if (!user) {
             return res.status(404).json({ error: "User not found." });
@@ -89,26 +89,25 @@ async function updateBlogPost(req, res){
 
 
 
-// const getBlogPostWithComments = async (req, res) => {
-//     try {
-//         const postId = req.params.postId;
+const getBlogPostWithComments = async (req, res) => {
+    try {
+        const postId = req.params.postId;
 
-//         // Find the blog post
-//         const blogPost = await BlogPost.findById(postId).populate('comments');
+        // Find the blog post
+        const blogPost = await BlogPost.findById(postId).populate('comments');
 
-//         if (!blogPost) {
-//             return res.status(404).json({ error: 'Blog post not found' });
-//         }
+        if (!blogPost) {
+            return res.status(404).json({ error: 'Blog post not found' });
+        }
 
-//         // Retrieve comments associated with the blog post
-//         const comments = await Comment.find({ blogPost: postId });
+        const comments = await Comment.find({ blogPost: postId });
 
-//         res.status(200).json({ blogPost, comments });
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ error: 'Internal Server Error' });
-//     }
-// };
+        res.status(200).json({ blogPost, comments });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
 const getAllBlogPostsAndComments = async (req, res) => {
     try {
     
@@ -136,6 +135,6 @@ module.exports = {
     getBlogPosts,
     deleteBlogPost,
     getAllBlogPostsAndComments,
-    // getBlogPostWithComments,
+    getBlogPostWithComments,
     updateBlogPost
 };
