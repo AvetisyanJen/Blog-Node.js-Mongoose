@@ -6,7 +6,6 @@ const { generateAccessToken } = require('../jwt/generate');
 
 async function register(req, res) {
    
-
     try {
         const { email, userName, password } = req.body;
         const errors = validationResult(req);
@@ -43,6 +42,8 @@ async function register(req, res) {
         }
     }
 }
+
+
 
 
 async function login(req, res) {

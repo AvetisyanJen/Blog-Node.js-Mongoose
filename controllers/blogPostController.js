@@ -109,19 +109,29 @@ const getBlogPostWithComments = async (req, res) => {
     }
 };
 const getAllBlogPostsAndComments = async (req, res) => {
-    try {
+    // try {
     
-        const blogPosts = await BlogPost.find().populate('comments');
-
+    //     const blogPosts = await BlogPost.find().populate('comments');
+    //     console.log('Blog Posts:', blogPosts);
    
-        const comments = await Comment.find();
+    //     const comments = await Comment.find();
 
-        res.status(200).json({ blogPosts, comments });
+    //     res.status(200).json({ blogPosts, comments });
+    // } catch (error) {
+    //     console.error(error);
+    //     res.status(500).json({ error: 'Internal Server Error' });
+    // }
+    try {
+        // Populate the 'comments' field in the BlogPost model
+        const blogPosts = await BlogPost.find().populate('comments').exec();
+
+        res.json(blogPosts);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 };
+
 
 
 
