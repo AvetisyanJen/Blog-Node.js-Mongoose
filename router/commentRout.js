@@ -12,7 +12,7 @@ const { CheckBlogPostOwnership}=require('../middleware/UserOwns')
 
 comment_router.post("/create",AuthenticateUserToken,createComment)
 
-comment_router.delete("/delete/:blogPostId/:commentId",AuthenticateUserToken,CheckBlogPostOwnership,deleteComment)
+comment_router.delete("/delete/:postId/:commentId",AuthenticateUserToken,CheckBlogPostOwnership,deleteComment)
 
 
 

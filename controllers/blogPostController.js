@@ -47,15 +47,41 @@ async function getBlogPosts(req, res) {
 }
 
 
-async function deleteBlogPost(req,res){
+// async function deleteBlogPost(req,res){
+//     try {
+//         const deletedBlogPost = await BlogPost.findByIdAndDelete(req.params.postId);
+//         res.json({ message: "Blog post deleted successfully", deletedBlogPost });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ error: "Internal Server Error" });
+//     }
+// }
+
+
+
+async function deleteBlogPost(req, res) {
     try {
         const deletedBlogPost = await BlogPost.findByIdAndDelete(req.params.postId);
+
+        // Check if the blog post is found and deleted
+        if (!deletedBlogPost) {
+            return res.status(404).json({ error: "Blog post not found" });
+        }
+
+        // Delete associated comments
+        for (const commentId of deletedBlogPost.comments) {
+            await Comment.findByIdAndDelete(commentId);
+        }
+
         res.json({ message: "Blog post deleted successfully", deletedBlogPost });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 }
+
+
+
 
 async function updateBlogPost(req, res){
     try {
@@ -109,20 +135,9 @@ const getBlogPostWithComments = async (req, res) => {
     }
 };
 const getAllBlogPostsAndComments = async (req, res) => {
-    // try {
-    
-    //     const blogPosts = await BlogPost.find().populate('comments');
-    //     console.log('Blog Posts:', blogPosts);
-   
-    //     const comments = await Comment.find();
-
-    //     res.status(200).json({ blogPosts, comments });
-    // } catch (error) {
-    //     console.error(error);
-    //     res.status(500).json({ error: 'Internal Server Error' });
-    // }
+  
     try {
-        // Populate the 'comments' field in the BlogPost model
+   
         const blogPosts = await BlogPost.find().populate('comments').exec();
 
         res.json(blogPosts);
